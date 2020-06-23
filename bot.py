@@ -37,6 +37,7 @@ while True:
                                         client.send_message('juspay', text + ' added to filters')
                         elif '/join' in text:
                                 text = text.replace('/join ', '')
+				last_message[text] = 0
                                 if text not in group_array:
                                         group_array.append(text)
                                         csv.writer(open('groups.csv', 'w')).writerow(group_array)
