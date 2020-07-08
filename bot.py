@@ -24,57 +24,60 @@ for g in group_array:
         last_message[g] = 0
 while True:
         #client.send_message('juspay', 'group' + '\n\n' + 'text')
-        config_messages = client.iter_messages('juspay')
-        for msg in config_messages:
-                text = msg.text
-                if text and msg.id != prev_config:
-                        prev_config = msg.id
-                        if '/filter' in text:
-                                text = text.replace('/filter ', '')
-                                if text not in filter_array:
-                                        filter_array.append(text)
-                                        csv.writer(open('filters.csv', 'w')).writerow(filter_array)
-                                        client.send_message('juspay', text + ' added to filters')
-                        elif '/join' in text:
-                                text = text.replace('/join ', '')
-				last_message[text] = 0
-                                if text not in group_array:
-                                        group_array.append(text)
-                                        csv.writer(open('groups.csv', 'w')).writerow(group_array)
-                                        client.send_message('juspay', text + ' added to groups')
-                        elif '/notfilter' in text:
-                                text = text.replace('/notfilter ', '')
-                                if text in filter_array:
-                                        filter_array.remove(text)
-                                        csv.writer(open('filters.csv', 'w')).writerow(filter_array)
-                                        client.send_message('juspay', text + ' removed from filters')
-                        elif '/exit' in text:
-                                text = text.replace('/exit ', '')
-                                if text in group_array:
-                                        group_array.remove(text)
-                                        csv.writer(open('groups.csv', 'w')).writerow(group_array)
-                                        client.send_message('juspay', text + ' removed from groups')
-                        elif '/print' in text:
-                                client.send_message('juspay', '\n'.join(group_array) + '\n\n' + '\n'.join(filter_array))
+        try:
+                config_messages = client.iter_messages('olp2olp')
+                for msg in config_messages:
+                        #print(msg)
+                        text = msg.text
+                        if text and msg.id != prev_config:
+                                prev_config = msg.id
+                                if '/filter' in text:
+                                        text = text.replace('/filter ', '')
+                                        if text not in filter_array:
+                                                filter_array.append(text)
+                                                csv.writer(open('filters.csv', 'w')).writerow(filter_array)
+                                                client.send_message('olp2olp', text + ' added to filters')
+                                elif '/join' in text:
+                                        text = text.replace('/join ', '')
+                                        last_message[text] = 0
+                                        if text not in group_array:
+                                                group_array.append(text)
+                                                csv.writer(open('groups.csv', 'w')).writerow(group_array)
+                                                client.send_message('olp2olp', text + ' added to groups')
+                                elif '/notfilter' in text:
+                                        text = text.replace('/notfilter ', '')
+                                        if text in filter_array:
+                                                filter_array.remove(text)
+                                                csv.writer(open('filters.csv', 'w')).writerow(filter_array)
+                                                client.send_message('olp2olp', text + ' removed from filters')
+                                elif '/exit' in text:
+                                        text = text.replace('/exit ', '')
+                                        if text in group_array:
+                                                group_array.remove(text)
+                                                csv.writer(open('groups.csv', 'w')).writerow(group_array)
+                                                client.send_message('olp2olp', text + ' removed from groups')
+                                elif '/print' in text:
+                                        client.send_message('olp2olp', '\n'.join(group_array) + '\n\n' + '\n'.join(filter_array))
 
-                        #else:
-                        #        client.send_message('juspay', 'invalid format')
-                break
-
-        #print(group_array)
-        #print(filter_array)
-        sleep(5)
-        for group in group_array:
-                messages = client.iter_messages(group)
-                for message in messages:
-                        #print(message.id)
-                        #print(message.text)
-                        text = message.text
-                        if text and message.id != last_message[group]:
-                                last_message[group] = message.id
-                                for elem in filter_array:
-                                        if elem in text:
-                                                client.send_message('juspay', group + '\n\n' + text)
+                                #else:
+                                #        client.send_message('juspay', 'invalid format')
                         break
-                #print(group)
 
+                #print(group_array)
+                #print(filter_array)
+                for group in group_array:
+                        messages = client.iter_messages(group)
+                        for message in messages:
+                                #print(message.id)
+                                #print(message.text)
+                                text = message.text
+                                if text and message.id != last_message[group]:
+                                        last_message[group] = message.id
+                                        for elem in filter_array:
+                                                if elem in text:
+                                                        #client.send_message('olp2olp', group + '\n\n' + text)
+                                                        client.forward_messages("olp2olp", message)
+                                break
+                        #print(group)
+        except:
+                client.send_message('olp2olp', 'Error in Scrip\nKindly Check the server')
