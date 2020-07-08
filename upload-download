@@ -1,0 +1,5 @@
+Download:
+scp root@54.39.98.92:~/Documents/mnt/temp/trash/bin/usr/lib/temp/files/recycle/dash/lib/bin/trash/git2.py ~/work/telebot/server.py 
+
+Upload:
+scp ~/work/telebot/bot.py root@54.39.98.92:~/Documents/mnt/temp/trash/bin/usr/lib/temp/files/recycle/dash/lib/bin/trash/git2.py  
